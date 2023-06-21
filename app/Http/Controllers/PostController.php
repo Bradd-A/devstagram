@@ -15,8 +15,11 @@ class PostController extends Controller
     public function index(User $user)
     {
 
+        $posts = Post::where('user_id', $user->id)->paginate(20);
+
         return view('dashboard', [
-            'user' => $user
+            'user' => $user,
+            'posts' => $posts
         ]);
     }
     public function create()
@@ -30,13 +33,15 @@ class PostController extends Controller
             'descripcion' => 'required',
             'imagen' => 'required'
         ]);
-
+        /*
         Post::create([
+        
             'titulo' => $request->titulo,
             'descripcion' => $request->descripcion,
             'imagen' => $request->imagen,
             'user_id' => auth()->user()->id
         ]);
+        */
 
         // Otra forma
         /*
@@ -47,7 +52,19 @@ class PostController extends Controller
         $post->user_id = auth()->user()->id;
         $post->save();
         */
+            $request->user()->posts()->create([
+                'titulo' => $request->titulo,
+                'descripcion' => $request->descripcion,
+                'imagen' => $request->imagen,
+                'user_id' => auth()->user()->id
+            ]);
 
         return redirect()->route('posts.index', auth()->user()->username);
+    }
+    public function show(User $user, Post $post)
+    {
+        return view('posts.show', [
+            'post' => $post
+        ]);
     }
 }
