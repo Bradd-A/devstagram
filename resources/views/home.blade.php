@@ -2,12 +2,12 @@
 
 @section('titulo')
 
-    Tienda Virtual
+    Pagina principal
 
 @endsection
 
 @section('contenido')
 
-    Nuestra Tienda
-
+    <x-listar-post :posts="$posts" />
+    
 @endsection
